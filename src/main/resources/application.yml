@@ -28,3 +28,6 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+# coupon-service url
+coupon-service:
+  url: http://localhost:9092/coupon-service/coupons/
