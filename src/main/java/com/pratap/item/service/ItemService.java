@@ -8,6 +8,6 @@ import java.util.List;
 public interface ItemService {
 
     List<ItemDto> getItems();
-
     ItemDto createItem(ItemDto itemDto) throws Exception;
+    ItemDto getItemById(String itemId) throws Exception;
 }
