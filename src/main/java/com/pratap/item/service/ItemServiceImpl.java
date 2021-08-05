@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pratap.item.dto.ItemDto;
 import com.pratap.item.entity.ItemEntity;
+import com.pratap.item.exception.ItemNotFoundException;
 import com.pratap.item.repository.ItemRepository;
 import com.pratap.item.utils.ItemUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -43,5 +44,19 @@ public class ItemServiceImpl implements ItemService{
         ItemEntity itemEntity = new ModelMapper().map(itemDto, ItemEntity.class);
         ItemEntity savedItem = itemRepository.save(itemEntity);
         return new ModelMapper().map(savedItem, ItemDto.class);
+    }
+
+    @Override
+    public ItemDto getItemById(String itemId) throws JsonProcessingException {
+        
+        log.info("Executing getItemById() with itemId={}", itemId);
+        ItemEntity fetchedItemDetails = itemRepository.findItemByItemId(itemId);
+        if (fetchedItemDetails == null){
+            log.error("item not found by itemId={}", itemId);
+            throw new ItemNotFoundException("item not found by itemId="+ itemId);
+        }
+
+        log.info("fetched item details fetchedItemDetails={}", jsonMapper.writeValueAsString(fetchedItemDetails));
+        return new ModelMapper().map(fetchedItemDetails, ItemDto.class);
     }
 }
