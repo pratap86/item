@@ -31,3 +31,13 @@ server:
 # coupon-service url
 coupon-service:
   url: http://localhost:9092/coupon-service/coupons/
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+  hystrix:
+    enabled: true

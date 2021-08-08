@@ -5,6 +5,7 @@ import com.pratap.item.dto.ItemDto;
 import com.pratap.item.model.request.ItemRequestModel;
 import com.pratap.item.model.response.CouponResponseModel;
 import com.pratap.item.model.response.ItemResponseModel;
+import com.pratap.item.proxy.CouponProxy;
 import com.pratap.item.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -40,10 +41,7 @@ public class ItemRestController {
     private ObjectMapper jsonMapper;
 
     @Autowired
-    private RestTemplate restTemplate;
-
-    @Value("${coupon-service.url}")
-    private String couponServiceURL;
+    private CouponProxy couponProxy;
 
     @GetMapping
     public ResponseEntity<List<ItemResponseModel>> getItems(){
@@ -62,7 +60,8 @@ public class ItemRestController {
 
         log.info("Executing createItem() with payload={}", jsonMapper.writeValueAsString(itemRequestModel));
         ItemDto itemDto = new ModelMapper().map(itemRequestModel, ItemDto.class);
-        CouponResponseModel couponResponseModel = restTemplate.getForObject(couponServiceURL + itemRequestModel.getCouponCode(), CouponResponseModel.class);
+        //CouponResponseModel couponResponseModel = restTemplate.getForObject(couponServiceURL + itemRequestModel.getCouponCode(), CouponResponseModel.class);
+        CouponResponseModel couponResponseModel = couponProxy.getCouponByCode(itemRequestModel.getCouponCode());
         itemDto.setPrice(itemDto.getPrice().subtract(couponResponseModel.getDiscount()));
         ItemDto savedItem = itemService.createItem(itemDto);
         ItemResponseModel itemResponseModel = new ModelMapper().map(savedItem, ItemResponseModel.class);
