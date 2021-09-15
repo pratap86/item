@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ItemNotFoundException extends RuntimeException{
 
+    private static final long serialVersionUID = -2555044471661632728L;
+
     public ItemNotFoundException(String message){
         super(message);
     }
